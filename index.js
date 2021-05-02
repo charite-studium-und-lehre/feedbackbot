@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
+var request = require('request');
 
 const { WebClient } = require('@slack/web-api');
 const HttpsProxyAgent = require('https-proxy-agent');
@@ -29,6 +30,17 @@ const web = new WebClient(token, { agent: proxy });
 // This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
 const conversationId = process.env.CHANNEL_ID;
 
+// Teams webhook
+const teamsHook = 'https://charitede.webhook.office.com/webhookb2/05cdecbb-03b1-4cf7-934e-d6e1853711be@afe91939-923e-432c-bc66-cbc3ec18d02c/IncomingWebhook/0e943482864140a8a8a396ca284f9601/ed938071-d67b-4ba0-82fc-652e714d5056';
+
+var teamsOptions = {
+    uri: teamsHook,
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+}
+
 app.use(cors({ origin: '*', allowedHeaders: [ 'Authorization', 'Content-Type' ] }))
 
 // Attach the event adapter to the express app as a middleware
@@ -50,6 +62,17 @@ io.on('connection', function(socket){
 				}
 			})
 			.catch( err => console.error(err) )
+
+		var teamsMessage = {
+			...teamsOptions, 
+			body: JSON.stringify({'text': 'Absender: ' 
+				+ (data.email || socket.id) + '\nNachricht: ' 
+				+ data.message}),
+		};
+
+		request(teamsMessage, function (error, response) {
+		    console.log(error);
+		});
 	})
 
 	socket.on('join', data => {
@@ -60,4 +83,3 @@ io.on('connection', function(socket){
 http.listen(process.env.PORT || 8001, function(){
 	console.log('listening on *:8001');
 });
-

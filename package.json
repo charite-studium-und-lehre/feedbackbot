@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "https-proxy-agent": "^4.0.0",
     "nodemon": "^1.19.1",
+    "request": "^2.88.2",
     "socket.io": "^2.2.0"
   }
 }
