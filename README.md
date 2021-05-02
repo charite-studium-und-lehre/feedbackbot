@@ -1,5 +1,4 @@
 # Levelup-Feedbackbot
 
-Der Feedbackbot sendet Infos, die von Benutzern auf Levelup eingegeben werden, an einen Slack-Kanal.
+Der Feedbackbot sendet Infos in MS Teams, die von Benutzern auf Levelup eingegeben werden.
 
-Siehe 
